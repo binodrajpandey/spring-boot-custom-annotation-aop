@@ -23,6 +23,6 @@ public class CustomAnnotationIntegrationTest {
       
     @Test
     public void shouldApplyCustomAnnotation() throws InterruptedException {
-        service.serve();
+        service.serve("3");
 }
 }

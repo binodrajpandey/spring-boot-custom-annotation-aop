@@ -6,30 +6,38 @@ import java.lang.reflect.Method;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- *Create our Aspect
+ * Create our Aspect
+ * 
  * @author binod
  */
 @Aspect
 @Component
 public class ExampleAspect {
-    /**
-     * now create pointcut and advice
-     * @param joinPoint
-     */
-    @Around("@annotation(LogExecutionTime)")
-public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
-    long start = System.currentTimeMillis();
-    System.out.println("This is before method execution");
-    Object proceed = joinPoint.proceed();
- System.out.println(joinPoint.getSignature().getName());
-   Method m = joinPoint.getTarget().getClass().getMethod(joinPoint.getSignature().getName());
- System.out.println(joinPoint.getTarget().getClass());
- System.out.println(this.getClass());
-   LogExecutionTime manno=m.getAnnotation(LogExecutionTime.class);  
-   System.out.println("the annotation value is"+manno.value());
-    return proceed;
-}
+	private static final Logger logger=LoggerFactory.getLogger(ExampleAspect.class);
+	/**
+	 * now create pointcut and advice
+	 * 
+	 * @param joinPoint
+	 */
+	@Around("@annotation(LogExecutionTime)")
+	public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+		logger.info("This is before method execution");
+		
+		Object proceed = joinPoint.proceed();
+		
+		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+		Method m =signature.getMethod(); 
+			//	joinPoint.getTarget().getClass().getMethod(joinPoint.getSignature().getName(),String.class);
+		LogExecutionTime customAnnotation = m.getAnnotation(LogExecutionTime.class);
+		Object dynamicValue = CustomSpringExpressionLanguageParser.
+                getDynamicValue(signature.getParameterNames(), joinPoint.getArgs(), customAnnotation.value());
+       logger.info("Dynamic Value Fetched is:: {}",dynamicValue);
+		return proceed;
+	}
 }
