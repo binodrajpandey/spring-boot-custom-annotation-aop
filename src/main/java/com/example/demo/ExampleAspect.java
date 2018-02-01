@@ -19,28 +19,29 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class ExampleAspect {
-	private static final Logger logger=LoggerFactory.getLogger(ExampleAspect.class);
+	private static final Logger logger = LoggerFactory.getLogger(ExampleAspect.class);
+
 	/**
 	 * now create pointcut and advice
 	 * 
 	 * @param joinPoint
 	 */
 	@Around("@annotation(LoggedInBy)")
-	public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+	public Object logUserNameAndId(ProceedingJoinPoint joinPoint) throws Throwable {
 		logger.info("This is before method execution");
-		
+
 		Object proceed = joinPoint.proceed();
-		
+		//annotated method starts here
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-		Method m =signature.getMethod(); 
-			//	joinPoint.getTarget().getClass().getMethod(joinPoint.getSignature().getName(),String.class);
+		Method m = signature.getMethod();
+		// joinPoint.getTarget().getClass().getMethod(joinPoint.getSignature().getName(),String.class);
 		LoggedInBy customAnnotation = m.getAnnotation(LoggedInBy.class);
-		Object dynamicName = CustomSpringExpressionLanguageParser.
-                getDynamicValue(signature.getParameterNames(), joinPoint.getArgs(), customAnnotation.name());
-       logger.info("Dynamic Name Fetched is:: {}",dynamicName);
-		Object dynamicId = CustomSpringExpressionLanguageParser.
-                getDynamicValue(signature.getParameterNames(), joinPoint.getArgs(), customAnnotation.id());
-       logger.info("Dynamic ID Fetched is:: {}",dynamicId);
+		Object dynamicName = CustomSpringExpressionLanguageParser.getDynamicValue(signature.getParameterNames(),
+				joinPoint.getArgs(), customAnnotation.name());
+		logger.info("Dynamic Name Fetched is:: {}", dynamicName);
+		Object dynamicId = CustomSpringExpressionLanguageParser.getDynamicValue(signature.getParameterNames(),
+				joinPoint.getArgs(), customAnnotation.id());
+		logger.info("Dynamic ID Fetched is:: {}", dynamicId);
 		return proceed;
 	}
 }
