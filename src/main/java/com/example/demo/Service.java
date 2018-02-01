@@ -13,8 +13,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Service {
-    @LogExecutionTime
+    @LogExecutionTime(value=3)
     public void serve() throws InterruptedException {
+    	System.out.println("this is inside method");
         Thread.sleep(2000);
     } 
 }
