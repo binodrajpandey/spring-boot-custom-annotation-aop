@@ -12,7 +12,8 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface LogExecutionTime {
-	String value() default "0";  
+public @interface LoggedInBy {
+	String id() default "0";
+	String name() default "'DEFAULT'";  
     
 }

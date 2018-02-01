@@ -22,7 +22,17 @@ public class CustomAnnotationIntegrationTest {
     private Service service;
       
     @Test
-    public void shouldApplyCustomAnnotation() throws InterruptedException {
-        service.serve("3");
+    public void shouldApplyCustomAnnotationAndPrintBinod()  {
+        User user = new User();
+        user.setUserId(1L);
+        user.setName("Binod");
+		service.printName(user);
+}
+    @Test
+    public void shouldApplyCustomAnnotationAndShouldPrintOne(){
+        User user = new User();
+        user.setUserId(1L);
+        user.setName("Binod");
+		service.printId(user);
 }
 }

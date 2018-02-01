@@ -5,6 +5,8 @@
  */
 package com.example.demo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,8 +15,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Service {
-    @LogExecutionTime(value="#val")
-    public void serve(String val) throws InterruptedException {
-    	System.out.println("this is inside method");
+    private static final Logger logger=LoggerFactory.getLogger(Service.class);
+  
+    @LoggedInBy(id="#user.userId")
+    public void printId(User user) {
+    	logger.info("Excuting Custom annotation for Id");
+    } 
+    @LoggedInBy(name="#user.name")
+    public void printName(User user) {
+    	logger.info("Excuting Custom annotation for Name");
     } 
 }
